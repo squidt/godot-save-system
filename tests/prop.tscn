@@ -3,21 +3,10 @@
 [ext_resource type="Texture2D" uid="uid://crtiqya63c1ja" path="res://icon.svg" id="1_msun4"]
 [ext_resource type="Script" uid="uid://8dsguigkf3fd" path="res://addons/save-system/core/saveable.gd" id="2_ukn83"]
 [ext_resource type="Resource" uid="uid://c4ryqdatxevld" path="res://tests/prop_save.tres" id="3_6n3xd"]
-[ext_resource type="Script" uid="uid://m15m5lohwcyj" path="res://addons/save-system/core/behavior.gd" id="4_prthx"]
-[ext_resource type="Script" uid="uid://clmbn2ps3jgs5" path="res://addons/save-system/core/step.gd" id="5_ipbuu"]
-[ext_resource type="Script" uid="uid://denxwqo4gl48y" path="res://addons/save-system/impl/xform_3d.gd" id="6_knqot"]
-
-[sub_resource type="Resource" id="Resource_efjhf"]
-script = ExtResource("6_knqot")
-metadata/_custom_type_script = "uid://denxwqo4gl48y"
-
-[sub_resource type="Resource" id="Resource_60xpx"]
-script = ExtResource("4_prthx")
-steps = Array[ExtResource("5_ipbuu")]([SubResource("Resource_efjhf")])
 
 [node name="Sprite3D" type="Sprite3D" unique_id=271544384]
 texture = ExtResource("1_msun4")
-metadata/Saveable = Object(Node,"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","script":ExtResource("2_ukn83"),"savenprint":Callable(),"enabled":true,"behavior":ExtResource("3_6n3xd"),"_save_uid":"suid://0318fd4937d7","metadata/_custom_type_script":"uid://8dsguigkf3fd")
+metadata/Saveable = Object(Node,"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","script":ExtResource("2_ukn83"),"savenprint":Callable(),"_enabled":true,"_recreated":true,"behavior":ExtResource("3_6n3xd"),"_save_uid":"suid://0318fd4937d7","metadata/_custom_type_script":"uid://8dsguigkf3fd")
 
 
 [node name="Saveable" type="Node" parent="." unique_id=52204666]
@@ -26,46 +15,38 @@ behavior = ExtResource("3_6n3xd")
 metadata/_custom_type_script = "uid://8dsguigkf3fd"
 
 [node name="Sprite3D" type="Sprite3D" parent="." unique_id=1092233815]
-metadata/Saveable = Object(Node,"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","script":ExtResource("2_ukn83"),"savenprint":Callable(),"enabled":true,"behavior":SubResource("Resource_60xpx"),"_save_uid":"suid://42ddb9ad1b1d","metadata/_custom_type_script":"uid://8dsguigkf3fd")
+transform = Transform3D(6.939611, -0.7846747, 0.7824909, 0.7299169, 7.9367948, -0.6278082, -0.5559015, 0.62576485, 8.9439125, 1, 2, 3)
+metadata/Saveable = Object(Node,"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","script":ExtResource("2_ukn83"),"savenprint":Callable(),"_enabled":true,"_recreated":true,"behavior":ExtResource("3_6n3xd"),"_save_uid":"suid://42ddb9ad1b1d","metadata/_custom_type_script":"uid://8dsguigkf3fd")
 
 
 [node name="Saveable" type="Node" parent="Sprite3D" unique_id=546044923]
 script = ExtResource("2_ukn83")
-behavior = SubResource("Resource_60xpx")
+behavior = ExtResource("3_6n3xd")
 metadata/_custom_type_script = "uid://8dsguigkf3fd"
 
 [node name="Sprite3D3" type="Sprite3D" parent="Sprite3D" unique_id=1789636271]
-metadata/Saveable = Object(Node,"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","script":ExtResource("2_ukn83"),"savenprint":Callable(),"enabled":true,"behavior":SubResource("Resource_60xpx"),"_save_uid":"suid://a38ea01ce26a","metadata/_custom_type_script":"uid://8dsguigkf3fd")
+metadata/Saveable = Object(Node,"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","script":ExtResource("2_ukn83"),"savenprint":Callable(),"_enabled":true,"_recreated":true,"behavior":ExtResource("3_6n3xd"),"_save_uid":"suid://a38ea01ce26a","metadata/_custom_type_script":"uid://8dsguigkf3fd")
 
 
 [node name="Saveable" type="Node" parent="Sprite3D/Sprite3D3" unique_id=1847234985]
 script = ExtResource("2_ukn83")
-behavior = SubResource("Resource_60xpx")
-metadata/_custom_type_script = "uid://8dsguigkf3fd"
-
-[node name="Sprite3D3" type="Sprite3D" parent="Sprite3D/Sprite3D3" unique_id=1897354843]
-metadata/Saveable = Object(Node,"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","script":ExtResource("2_ukn83"),"savenprint":Callable(),"enabled":true,"behavior":SubResource("Resource_60xpx"),"_save_uid":"suid://2998f12ed6bd","metadata/_custom_type_script":"uid://8dsguigkf3fd")
-
-
-[node name="Saveable" type="Node" parent="Sprite3D/Sprite3D3/Sprite3D3" unique_id=1690414204]
-script = ExtResource("2_ukn83")
-behavior = SubResource("Resource_60xpx")
+behavior = ExtResource("3_6n3xd")
 metadata/_custom_type_script = "uid://8dsguigkf3fd"
 
 [node name="Sprite3D2" type="Sprite3D" parent="." unique_id=1855319802]
-metadata/Saveable = Object(Node,"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","script":ExtResource("2_ukn83"),"savenprint":Callable(),"enabled":true,"behavior":SubResource("Resource_60xpx"),"_save_uid":"suid://14b13e96455d","metadata/_custom_type_script":"uid://8dsguigkf3fd")
+metadata/Saveable = Object(Node,"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","script":ExtResource("2_ukn83"),"savenprint":Callable(),"_enabled":true,"_recreated":true,"behavior":ExtResource("3_6n3xd"),"_save_uid":"suid://14b13e96455d","metadata/_custom_type_script":"uid://8dsguigkf3fd")
 
 
 [node name="Saveable" type="Node" parent="Sprite3D2" unique_id=1826535654]
 script = ExtResource("2_ukn83")
-behavior = SubResource("Resource_60xpx")
+behavior = ExtResource("3_6n3xd")
 metadata/_custom_type_script = "uid://8dsguigkf3fd"
 
 [node name="Sprite3D3" type="Sprite3D" parent="." unique_id=1811014863]
-metadata/Saveable = Object(Node,"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","script":ExtResource("2_ukn83"),"savenprint":Callable(),"enabled":true,"behavior":SubResource("Resource_60xpx"),"_save_uid":"suid://9e30ccd3fd7f","metadata/_custom_type_script":"uid://8dsguigkf3fd")
+metadata/Saveable = Object(Node,"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","script":ExtResource("2_ukn83"),"savenprint":Callable(),"_enabled":true,"_recreated":true,"behavior":ExtResource("3_6n3xd"),"_save_uid":"suid://9e30ccd3fd7f","metadata/_custom_type_script":"uid://8dsguigkf3fd")
 
 
 [node name="Saveable" type="Node" parent="Sprite3D3" unique_id=892015799]
 script = ExtResource("2_ukn83")
-behavior = SubResource("Resource_60xpx")
+behavior = ExtResource("3_6n3xd")
 metadata/_custom_type_script = "uid://8dsguigkf3fd"

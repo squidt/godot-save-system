@@ -1,19 +1,14 @@
 [gd_resource type="Resource" script_class="SaveBehavior" format=3 uid="uid://c4ryqdatxevld"]
 
-[ext_resource type="Script" uid="uid://m15m5lohwcyj" path="res://addons/save-system/core/behavior.gd" id="1_t7ius"]
 [ext_resource type="Script" uid="uid://clmbn2ps3jgs5" path="res://addons/save-system/core/step.gd" id="2_f0366"]
-[ext_resource type="Script" uid="uid://1ndhj85fnmdy" path="res://addons/save-system/core/owner.gd" id="3_50jnv"]
-[ext_resource type="Script" uid="uid://denxwqo4gl48y" path="res://addons/save-system/impl/xform_3d.gd" id="4_mgtnp"]
+[ext_resource type="Script" uid="uid://m15m5lohwcyj" path="res://addons/save-system/core/behavior.gd" id="3_50jnv"]
+[ext_resource type="Script" uid="uid://denxwqo4gl48y" path="res://addons/save-system/impl/transform_3d.gd" id="4_mgtnp"]
 
-[sub_resource type="Resource" id="Resource_58ubu"]
-script = ExtResource("3_50jnv")
-metadata/_custom_type_script = "uid://1ndhj85fnmdy"
-
-[sub_resource type="Resource" id="Resource_m8nfh"]
+[sub_resource type="Resource" id="Resource_5m1kk"]
 script = ExtResource("4_mgtnp")
 metadata/_custom_type_script = "uid://denxwqo4gl48y"
 
 [resource]
-script = ExtResource("1_t7ius")
-steps = Array[ExtResource("2_f0366")]([SubResource("Resource_58ubu"), SubResource("Resource_m8nfh")])
+script = ExtResource("3_50jnv")
+steps = Array[ExtResource("2_f0366")]([SubResource("Resource_5m1kk")])
 metadata/_custom_type_script = "uid://m15m5lohwcyj"

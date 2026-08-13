@@ -29,12 +29,12 @@ transform = Transform3D(1, 0, 0, 0, 0.9659259, 0.25881907, 0, -0.25881907, 0.965
 curve = SubResource("Curve3D_ebpr8")
 
 [node name="PathFollow3D" type="PathFollow3D" parent="Path3D" unique_id=314100449]
-transform = Transform3D(0.70707256, 0, -0.70707154, 0, 0.9999782, 0, 0.70707244, 0, 0.70707166, -2, 0, -2)
+transform = Transform3D(0.7070725, 0, -0.70707154, 0, 0.9999782, 0, 0.7070724, 0, 0.70707166, -2, 0, -2)
 script = SubResource("GDScript_am544")
 speed = -2.0
 
 [node name="Sprite3D" parent="Path3D/PathFollow3D" unique_id=271544384 instance=ExtResource("1_1wloe")]
 modulate = Color(1, 0, 0, 1)
 billboard = 2
-metadata/Saveable = Object(Node,"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","script":Resource("res://addons/save-system/core/saveable.gd"),"enabled":true,"behavior":Resource("res://tests/prop_save.tres"),"_save_uid":null,"metadata/_custom_type_script":"uid://8dsguigkf3fd")
+metadata/Saveable = Object(Node,"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","script":Resource("res://addons/save-system/core/saveable.gd"),"savenprint":Callable(),"_enabled":true,"_recreated":true,"behavior":Resource("res://tests/prop_save.tres"),"_save_uid":null,"metadata/_custom_type_script":"uid://8dsguigkf3fd")
 

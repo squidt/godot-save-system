@@ -2,7 +2,6 @@
 class_name Saveable extends Node
 
 const TRAIT_NAME := &"Saveable"
-const VERSION = 0
 
 signal saving
 signal saved
@@ -10,7 +9,13 @@ signal loading
 signal loaded
 
 @export_tool_button("print") var savenprint = _debug_print_serialization
-@export var enabled := true
+@export var _enabled := true
+
+## Recreates the trait owner from disk, then loads in save data if the trait owner is a .tscn file.
+## Set to false for child scenes that are not desired to be recreated i.e. they may have settings
+## already set inside of the parent scene that are not included in the save steps or the original
+## scene.
+@export var _recreated := true
 @export var behavior := SaveBehavior.new()
 
 var _save_uid
@@ -53,14 +58,12 @@ func _ready() -> void:
 	get_parent().set_meta(TRAIT_NAME, self)
 
 
-func is_owner() -> bool:
-	return behavior.steps.any(func(v: SaveStep): return v.is_owner())
-
 func is_enabled() -> bool:
-	return behavior.steps.any(func(v: SaveStep): return v.is_enabled())
+	return _enabled
 
-func is_reinstantiated() -> bool:
-	return behavior.steps.any(func(v: SaveStep): return v.is_reinstantiated())
+
+func is_save_owner() -> bool:
+	return !get_parent().scene_file_path.is_empty() and _recreated
 
 
 # trait.save_unique_id(): {
@@ -79,14 +82,21 @@ func is_reinstantiated() -> bool:
 #
 func serialized() -> Dictionary:
 	saving.emit()
-	if behavior.steps.is_empty():
-		return {}
 
 	var node := get_parent()
+	var data := {}
+
+	# prefix
 	var pref := SaveStep.Prefix.new()
-	var data := {pref.title(): pref.to(node)}
+	data[pref.title()] = pref.to(node)
+
 	for step in behavior.steps:
 		data.get_or_add("steps", {})[step.title()] = step.to(node)
+
+	# ownership of nested saves if applicable
+	if is_save_owner():
+		var ownership := SaveStep.Ownership.new()
+		data[ownership.title()] = ownership.to(node)
 
 	_save_uid = pref.get_save_uid(data)
 	saved.emit()
@@ -99,6 +109,6 @@ func deserialize(data: Dictionary) -> void:
 		if entry:
 			step.from(get_parent(), entry)
 
+
 func _debug_print_serialization() -> void:
-	print_debug(JSON.stringify(serialized(), "    "))
-	
+	print_debug("\n", JSON.stringify(serialized(), "    ", false))
