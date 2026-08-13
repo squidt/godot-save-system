@@ -79,7 +79,7 @@ func serialized() -> Dictionary:
 		return {}
 
 	var node := get_parent()
-	var pref := SavePrefix.new()
+	var pref := SaveStep.Prefix.new()
 	var data := {pref.title(): pref.to(node)}
 	for step in steps:
 		data.get_or_add("steps", {})[step.title()] = step.to(node)

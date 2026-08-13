@@ -38,7 +38,7 @@ func to(node: Node) -> Variant:
 			child_data["path"] = node.get_path_to(child)
 
 		# add child entry with save_uid as unique id for the list
-		data[SavePrefix.get_save_uid(child_data)] = child_data
+		data[SaveStep.Prefix.get_save_uid(child_data)] = child_data
 	return {}
 
 
@@ -62,7 +62,7 @@ func from(node: Node, data: Variant) -> void:
 			pass
 		# reinstantiated
 		else:
-			var new = _recreate_child(node, SavePrefix.get_scene_uid(child_trait_data))
+			var new = _recreate_child(node, SaveStep.Prefix.get_scene_uid(child_trait_data))
 			if !new:
 				continue
 			restored[child_save_uid] = new
