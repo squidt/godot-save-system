@@ -6,7 +6,7 @@ func title() -> StringName:
 
 
 func version() -> int:
-	return 1
+	return 0
 
 
 func is_owner() -> bool:

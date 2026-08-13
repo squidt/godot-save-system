@@ -1,8 +1,8 @@
 @tool
-class_name SaveTrait extends Node
+class_name Saveable extends Node
 
-const TRAIT_NAME := &"SaveTrait"
-const VERSION = 1
+const TRAIT_NAME := &"Saveable"
+const VERSION = 0
 
 signal saving
 signal saved
@@ -19,7 +19,7 @@ static func is_trait(node: Node) -> bool:
 	return node.has_meta(TRAIT_NAME)
 
 
-static func as_trait(node: Node) -> SaveTrait:
+static func as_trait(node: Node) -> Saveable:
 	return node.get_meta(TRAIT_NAME)
 
 
@@ -29,6 +29,10 @@ static func get_uid(v: Object) -> String:
 	if v is Resource:
 		return ResourceUID.id_to_text(ResourceLoader.get_resource_uid(v.resource_path))
 	return &""
+
+
+static func make_save_uid(node) -> String:
+	return "suid://" + str(node.get_path()).sha256_text().substr(0, 12)
 
 
 # Makes an object from [param uid], instantiates if necessary. Null otherwise
@@ -47,26 +51,42 @@ func _ready() -> void:
 	get_parent().set_meta(TRAIT_NAME, self)
 
 
-# "node.name": {
-# "meta": [version, save, scene] e.g. "GuyNode3D": [1, "suid://bleh", "uid://godot"]
+func is_owner() -> bool:
+	return steps.any(func(v: SaveStep): return v.is_owner())
+
+
+func is_reinstantiated() -> bool:
+	return steps.any(func(v: SaveStep): return v.is_reinstantiated())
+
+
+# trait.save_unique_id(): {
+# "meta": [parent.name, version, save, scene] e.g. "GuyNode3D": [1, "suid://bleh", "uid://godot"]
 # "steps": {
 # 	"step.title()": [step.version(), step.to()]
 #   "funny": [1, "hehe"]
 #   "xform": [1, {position, rotation, scale}]
 # }}
+#
+# real example
+# "suid://cehjd31b8s": {
+# 	"meta": ["Node3D", "suid://cehjd31b8s", "uid://bh18dka82m", 0]
+# 	["xform", 0]: []
+# }
+#
 func serialized() -> Dictionary:
 	saving.emit()
 	if steps.is_empty():
 		return {}
 
 	var node := get_parent()
-	var dict := {"meta": get_save_meta(), "steps": {}}
+	var pref := SavePrefix.new()
+	var data := {pref.title(): pref.to(node)}
 	for step in steps:
-		dict["steps"].merge({step.title(): step.to(node)})
+		data.get_or_add("steps", {})[step.title()] = step.to(node)
 
-	_save_uid = dict["meta"].get(1)
+	_save_uid = pref.get_prefix_save_uid(data)
 	saved.emit()
-	return dict
+	return data
 
 
 func deserialize(data: Dictionary) -> void:
@@ -74,13 +94,3 @@ func deserialize(data: Dictionary) -> void:
 		var entry = data.get("steps", {}).get(step.title())
 		if entry:
 			step.from(get_parent(), entry)
-
-
-# version, save uid, scene uid
-func get_save_meta() -> Array:
-	var node = get_parent()
-	return [VERSION, make_save_uid(node), get_uid(node)]
-
-
-func make_save_uid(node) -> String:
-	return "suid://" + str(node.get_path()).sha256_text().substr(0, 12)

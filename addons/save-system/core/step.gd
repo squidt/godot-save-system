@@ -6,7 +6,6 @@ class_name SaveStep extends Resource
 @abstract func is_owner() -> bool
 @abstract func is_enabled() -> bool
 @abstract func is_reinstantiated() -> bool
-#@abstract func contains(step: SaveStep) -> bool
 
 @abstract func on_ready(node)
 @abstract func to(node: Node) -> Variant
