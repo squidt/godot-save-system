@@ -1,0 +1,89 @@
+[gd_scene format=3 uid="uid://c6epweyctvsam"]
+
+[sub_resource type="GDScript" id="GDScript_wsebr"]
+resource_name = "main"
+script/source = "extends Node
+
+const STARTING_MAP = \"uid://ci6dtybx64jjk\" # map_one.tscn
+
+var current_map: Node3D = null
+var _current_map_uid = \"\"
+
+# add map_one as first map
+func _ready() -> void:
+	map_transition(STARTING_MAP)
+
+
+func map_transition(_uid: String) -> void:
+	if _current_map_uid == _uid:
+		print_debug(\"Already on map (%s), no transition\" % [_uid])
+		return
+
+	if current_map:
+		current_map.queue_free()
+
+	_current_map_uid = _uid
+	var new_map = load(_uid).instantiate()
+	$World3D.add_child(new_map, true)
+	current_map = new_map
+	# TODO:
+	# save before transition:
+	# - save player
+	# - save map state and contents
+	# - save map to 'history'
+
+	# load next map:
+	# - load map from disk
+	# - if map in history:
+	#   - deserialize data into map from 'history'
+	pass
+"
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wsebr"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_v07e6"]
+sky_material = SubResource("ProceduralSkyMaterial_wsebr")
+
+[sub_resource type="Environment" id="Environment_ctdtd"]
+background_mode = 2
+sky = SubResource("Sky_v07e6")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="Main" type="Node" unique_id=1204108989]
+script = SubResource("GDScript_wsebr")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1435464205]
+environment = SubResource("Environment_ctdtd")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1635731203]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="World3D" type="Node3D" parent="." unique_id=2016640704]
+
+[node name="World2D" type="Node2D" parent="." unique_id=1055906356]
+
+[node name="Control" type="Control" parent="World2D" unique_id=2053647950]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="World2D/Control" unique_id=734262027]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="GoMapOne" type="Button" parent="World2D/Control/HBoxContainer" unique_id=1504605380]
+layout_mode = 2
+text = "go to map_one"
+
+[node name="GoMapTwo" type="Button" parent="World2D/Control/HBoxContainer" unique_id=2001556622]
+layout_mode = 2
+text = "go to map_two"
+
+[connection signal="pressed" from="World2D/Control/HBoxContainer/GoMapOne" to="." method="map_transition" binds= ["uid://ci6dtybx64jjk"]]
+[connection signal="pressed" from="World2D/Control/HBoxContainer/GoMapTwo" to="." method="map_transition" binds= ["uid://nq3ccdu6n4b4"]]

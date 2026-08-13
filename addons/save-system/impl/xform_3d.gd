@@ -1,3 +1,4 @@
+@tool
 class_name SaveTransform3D extends SaveStep
 
 

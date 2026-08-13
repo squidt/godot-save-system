@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://ci6dtybx64jjk"]
+
+[ext_resource type="PackedScene" uid="uid://bw2nqd2un12gf" path="res://tests/prop.tscn" id="1_7xbg5"]
+
+[sub_resource type="Curve3D" id="Curve3D_buuen"]
+closed = true
+_data = {
+"points": PackedVector3Array(-2, 0, 2, 2, 0, -2, -2, 0, -2, 0, 0, 0, 0, 0, 0, 2, 0, -2, 2, 0, -2, -2, 0, 2, 2, 0, 2, 0, 0, 0, 0, 0, 0, -2, 0, 2),
+"tilts": PackedFloat32Array(0, 0, 0, 0)
+}
+point_count = 4
+
+[sub_resource type="GDScript" id="GDScript_7xbg5"]
+resource_name = "path_follower"
+script/source = "extends PathFollow3D
+
+@export var speed = 2.0
+
+func _physics_process(delta: float) -> void:
+	progress += speed * delta
+"
+
+[node name="MapA" type="Node3D" unique_id=1470678316]
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=515383187]
+transform = Transform3D(1, 0, 0, 0, 0.9659259, 0.25881907, 0, -0.25881907, 0.9659258, 0, 2, 5)
+
+[node name="Path3D" type="Path3D" parent="." unique_id=1685551158]
+curve = SubResource("Curve3D_buuen")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="Path3D" unique_id=1241041180]
+transform = Transform3D(0.70708597, 0, -0.70708287, 0, 0.9999782, 0, 0.70708585, 0, 0.707083, -2, 0, -2)
+script = SubResource("GDScript_7xbg5")
+
+[node name="Sprite3D" parent="Path3D/PathFollow3D" unique_id=271544384 instance=ExtResource("1_7xbg5")]
+billboard = 2
+metadata/Saveable = Object(Node,"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","script":Resource("res://addons/save-system/core/saveable.gd"),"enabled":true,"behavior":Resource("res://tests/prop_save.tres"),"_save_uid":null,"metadata/_custom_type_script":"uid://8dsguigkf3fd")
+

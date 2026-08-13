@@ -1,3 +1,4 @@
+@tool
 class_name SaveOwner extends SaveStep
 
 var restored: Dictionary[String, Node] = {}

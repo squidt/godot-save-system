@@ -9,6 +9,7 @@ signal saved
 signal loading
 signal loaded
 
+@export_tool_button("print") var savenprint = _debug_print_serialization
 @export var enabled := true
 @export var behavior := SaveBehavior.new()
 
@@ -97,3 +98,7 @@ func deserialize(data: Dictionary) -> void:
 		var entry = data.get("steps", {}).get(step.title())
 		if entry:
 			step.from(get_parent(), entry)
+
+func _debug_print_serialization() -> void:
+	print_debug(JSON.stringify(serialized(), "    "))
+	
