@@ -10,7 +10,7 @@ signal loading
 signal loaded
 
 @export var enabled := true
-@export var steps: Array[SaveStep]
+@export var behavior := SaveBehavior.new()
 
 var _save_uid
 
@@ -48,15 +48,18 @@ static func make_object(uid: String) -> Object:
 
 func _ready() -> void:
 	assert(get_parent(), "Expected to be the child of any node.")
+	assert(behavior, "Expected 'Saveable::behavior' to be valid.")
 	get_parent().set_meta(TRAIT_NAME, self)
 
 
 func is_owner() -> bool:
-	return steps.any(func(v: SaveStep): return v.is_owner())
+	return behavior.steps.any(func(v: SaveStep): return v.is_owner())
 
+func is_enabled() -> bool:
+	return behavior.steps.any(func(v: SaveStep): return v.is_enabled())
 
 func is_reinstantiated() -> bool:
-	return steps.any(func(v: SaveStep): return v.is_reinstantiated())
+	return behavior.steps.any(func(v: SaveStep): return v.is_reinstantiated())
 
 
 # trait.save_unique_id(): {
@@ -75,22 +78,22 @@ func is_reinstantiated() -> bool:
 #
 func serialized() -> Dictionary:
 	saving.emit()
-	if steps.is_empty():
+	if behavior.steps.is_empty():
 		return {}
 
 	var node := get_parent()
 	var pref := SaveStep.Prefix.new()
 	var data := {pref.title(): pref.to(node)}
-	for step in steps:
+	for step in behavior.steps:
 		data.get_or_add("steps", {})[step.title()] = step.to(node)
 
-	_save_uid = pref.get_prefix_save_uid(data)
+	_save_uid = pref.get_save_uid(data)
 	saved.emit()
 	return data
 
 
 func deserialize(data: Dictionary) -> void:
-	for step in steps:
+	for step in behavior.steps:
 		var entry = data.get("steps", {}).get(step.title())
 		if entry:
 			step.from(get_parent(), entry)
