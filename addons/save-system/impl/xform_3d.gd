@@ -14,7 +14,7 @@ func is_owner() -> bool:
 
 
 func is_enabled() -> bool:
-	return false
+	return true
 
 
 func is_reinstantiated() -> bool:

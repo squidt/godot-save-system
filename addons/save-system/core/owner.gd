@@ -31,15 +31,16 @@ func to(node: Node) -> Variant:
 	var data := {}
 	var children := _collect_saveables(node)
 
-	for child: Saveable in children:
-		var child_data := child.serialized()
+	for child: Node in children:
+		var child_save := Saveable.as_trait(child)
+		var child_data := child_save.serialized()
 
-		if !child.is_reinstantiated():
+		if !child_save.is_reinstantiated():
 			child_data["path"] = node.get_path_to(child)
 
 		# add child entry with save_uid as unique id for the list
 		data[SaveStep.Prefix.get_save_uid(child_data)] = child_data
-	return {}
+	return data
 
 
 # load steps for an owner
@@ -114,7 +115,7 @@ func _collect_saveables(root: Node) -> Array[Node]:
 # 	- child5 - saveable
 # 		- ...
 func _collect_saveables_impl(current: Node, out: Array[Node]) -> void:
-	for child in current.get_chidren():
+	for child in current.get_children():
 		var saveable := Saveable.as_trait(child) if Saveable.is_trait(child) else null
 		if !saveable or !saveable.is_enabled():
 			continue
