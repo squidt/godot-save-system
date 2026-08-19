@@ -1,23 +1,12 @@
 [gd_scene format=3 uid="uid://c6epweyctvsam"]
 
 [ext_resource type="Script" uid="uid://b7qxa43b6uy81" path="res://tests/main.gd" id="1_cb43m"]
+[ext_resource type="Script" uid="uid://8dsguigkf3fd" path="res://addons/squid-save/core/saveable.gd" id="1_pi5dy"]
 [ext_resource type="Script" uid="uid://m15m5lohwcyj" path="res://addons/squid-save/core/behavior.gd" id="2_gn22r"]
 [ext_resource type="Script" uid="uid://clmbn2ps3jgs5" path="res://addons/squid-save/core/step.gd" id="3_cb43m"]
-[ext_resource type="Script" uid="uid://bgdgh221ym68a" path="res://tests/save_game.gd" id="4_gn22r"]
 
-[sub_resource type="GDScript" id="GDScript_gn22r"]
-resource_name = "MainSaveable"
-script/source = "extends Saveable
-"
-
-[sub_resource type="Resource" id="Resource_cb43m"]
-script = ExtResource("4_gn22r")
-metadata/_custom_type_script = "uid://bgdgh221ym68a"
-
-[sub_resource type="Resource" id="Resource_y6b0w"]
+[sub_resource type="Resource" id="Resource_gn22r"]
 script = ExtResource("2_gn22r")
-steps = Array[ExtResource("3_cb43m")]([SubResource("Resource_cb43m")])
-metadata/_custom_type_script = "uid://m15m5lohwcyj"
 
 [sub_resource type="GDScript" id="GDScript_v07e6"]
 resource_name = "GameState"
@@ -45,8 +34,9 @@ glow_enabled = true
 script = ExtResource("1_cb43m")
 
 [node name="Saveable" type="Node" parent="." unique_id=1829189887]
-script = SubResource("GDScript_gn22r")
-behavior = SubResource("Resource_y6b0w")
+script = ExtResource("1_pi5dy")
+ownership = 2
+behavior = SubResource("Resource_gn22r")
 metadata/_custom_type_script = "uid://8dsguigkf3fd"
 
 [node name="SaveInfo" type="Node" parent="." unique_id=2116426144]

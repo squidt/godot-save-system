@@ -24,9 +24,6 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if Engine.is_editor_hint():
-		return
-
 	if event.is_action_pressed(&"save_game"):
 		SaveManager.save_game()
 	elif event.is_action_pressed(&"load_game"):

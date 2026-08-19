@@ -3,6 +3,17 @@ class_name Saveable extends Node
 
 const TRAIT_NAME := &"Saveable"
 
+enum Ownership {
+	NONE,
+	AUTO,
+	MANUAL,
+}
+
+enum Recreation {
+	NONE,
+	AUTO,
+}
+
 signal saving
 signal saved
 signal loading
@@ -11,11 +22,13 @@ signal loaded
 @export_tool_button("print") var savenprint = _debug_print_serialization
 @export var _enabled := true
 
+## Ownership model. See [member Ownership]
+@export var ownership = Ownership.AUTO
 ## Recreates the trait owner from disk, then loads in save data if the trait owner is a .tscn file.
 ## Set to false for child scenes that are not desired to be recreated i.e. they may have settings
 ## already set inside of the parent scene that are not included in the save steps or the original
 ## scene.
-@export var _recreated := true
+@export var recreation = Recreation.AUTO
 @export var behavior := SaveBehavior.new()
 
 var _save_uid
@@ -69,8 +82,8 @@ func is_enabled() -> bool:
 	return _enabled
 
 
-func is_recreated() -> bool:
-	return _recreated
+func is_recreatable() -> bool:
+	return !get_parent().scene_file_path.is_empty() and recreation != Recreation.NONE
 
 
 func is_save_owner() -> bool:
@@ -82,23 +95,9 @@ func is_save_owner() -> bool:
 			+ "either due to a tool script or user chicanery and or sheganery."
 		)
 	)
-	return !get_parent().scene_file_path.is_empty() and is_recreated()
+	return (is_recreatable() or ownership == Ownership.MANUAL) and ownership != Ownership.NONE
 
 
-# trait.save_unique_id(): {
-# "meta": [parent.name, version, save, scene] e.g. "GuyNode3D": [1, "suid://bleh", "uid://godot"]
-# "steps": {
-# 	"step.title()": [step.version(), step.to()]
-#   "funny": [1, "hehe"]
-#   "xform": [1, {position, rotation, scale}]
-# }}
-#
-# real example
-# "suid://cehjd31b8s": {
-# 	"meta": ["Node3D", "suid://cehjd31b8s", "uid://bh18dka82m", 0]
-# 	["xform", 0]: []
-# }
-#
 func serialize() -> Dictionary:
 	saving.emit()
 
@@ -111,11 +110,7 @@ func serialize() -> Dictionary:
 	for step in behavior.steps:
 		data[step.title()] = step.to(node)
 
-	# ownership of nested saves if applicable
-	if is_save_owner():
-		var ownership := SaveStep.Ownership.to(node)
-		if !ownership.is_empty():
-			data[SaveStep.Ownership.title()] = ownership
+	_append_ownership(node, data)
 
 	_save_uid = pref.get_save_uid(data)
 	saved.emit()
@@ -140,6 +135,14 @@ func deserialize(data: Dictionary) -> void:
 	if is_save_owner() and data.has(SaveStep.Ownership.title()):
 		SaveStep.Ownership.from(node, data[SaveStep.Ownership.title()])
 	loaded.emit()
+
+
+## Appends ownership to data if applicable
+func _append_ownership(node: Node, data: Dictionary) -> void:
+	if ownership == Ownership.AUTO and is_save_owner():
+		var ownership := SaveStep.Ownership.to(node)
+		if !ownership.is_empty():
+			data[SaveStep.Ownership.title()] = ownership
 
 
 func _debug_print_serialization() -> void:

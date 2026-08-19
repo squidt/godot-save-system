@@ -31,10 +31,10 @@ class Prefix:
 		return [name, Saveable.make_save_uid(node), Saveable.get_uid(node)]
 
 	static func from(node: Node, data: Variant) -> void:
-		node.name = get_node_name(data).rsplit("/", false, 1).get(1)
+		node.name = get_node_path(data).rsplit("/", false, 1).get(1)
 		Saveable.as_trait(node)._save_uid = get_save_uid(data)
 
-	static func get_node_name(data: Dictionary) -> String:
+	static func get_node_path(data: Dictionary) -> String:
 		return data[title()][0]
 
 	static func get_save_uid(data: Dictionary) -> String:
@@ -73,10 +73,8 @@ class Ownership:
 			var child_save := Saveable.as_trait(child)
 			var child_data := child_save.serialize()
 
-			if !child_save.is_save_owner():
+			if !child_save.is_save_owner() or !child_save.is_recreatable():
 				child_data["local"] = true
-			else:
-				child_data["local"] = false
 
 			# add child entry with save_uid as unique id for the list
 			data[SaveStep.Prefix.get_save_uid(child_data)] = child_data
@@ -98,6 +96,8 @@ class Ownership:
 
 		# wait twice to fix name clashes on add_child()
 		await node.get_tree().process_frame
+		if !node:
+			return
 		await node.get_tree().process_frame
 		# end wait twice
 
@@ -109,11 +109,11 @@ class Ownership:
 				var local = node.get_node(path_in_scene)
 				var local_trait = Saveable.as_trait(local)
 				local_trait.deserialize(child_trait_data)
-				#breakpoint
 			# reinstantiated
 			else:
 				var new = _recreate_child(SaveStep.Prefix.get_scene_uid(child_trait_data))
 				if !new:  # TODO: error printing/ handle/ default error obj
+					printerr("SaveStep.Ownership::from(): Was unable to recreate child (%s)" % [SaveStep.Prefix.get_scene_uid(child_trait_data)])
 					continue
 				restored[child_save_uid] = new
 
@@ -138,12 +138,6 @@ class Ownership:
 				child_saveable._save_uid = child_save_uid
 				child_saveable.deserialize(child_trait_data)
 
-	func _queue_free_children(node) -> void:
-		var children := _collect_saveables(node)
-		for child in children:
-			if child.is_reinstantiated():
-				child.get_parent().queue_free()
-
 	static func _recreate_child(scene_uid: String) -> Node:
 		if !ResourceUID.has_id(ResourceUID.text_to_id(scene_uid)):
 			return null
@@ -155,7 +149,7 @@ class Ownership:
 	static func _queue_free_first_saveables(node: Node) -> void:
 		for child in node.get_children():
 			var saveable = Saveable.as_trait(child) if Saveable.is_trait(child) else null
-			if saveable and saveable.is_save_owner():
+			if saveable and saveable.is_recreatable():
 				child.queue_free()
 			else:
 				_queue_free_first_saveables(child)

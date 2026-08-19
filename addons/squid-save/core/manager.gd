@@ -44,21 +44,9 @@ static func _read_file(save_name: StringName) -> Dictionary:
 
 
 func _ready() -> void:
-	_recreated = false
-	print("ready called?")
+	recreation = Recreation.NONE
+	ownership = Ownership.MANUAL
 	super()
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if Engine.is_editor_hint():
-		return
-
-	if event.is_action_pressed(&"save_game"):
-		save_game()
-	elif event.is_action_pressed(&"load_game"):
-		load_game()
-	elif event.is_action_pressed(&"print_save"):
-		_debug_print_serialization()
 
 
 func is_save_owner() -> bool:
@@ -97,6 +85,6 @@ func serialize() -> Dictionary:
 func deserialize(data: Dictionary) -> void:
 	loading.emit()
 
-	SaveStep.Ownership.from(get_parent(), data.get("game"))
+	SaveStep.Ownership.from(get_parent(), data.get("state"))
 
 	loaded.emit()
