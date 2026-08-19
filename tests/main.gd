@@ -45,15 +45,15 @@ func map_load(uid: String) -> void:
 
 
 ## Serialize, Transition, Deserialize from history
-func map_transition(uid: String, transit_return: String, transit_entry: String) -> void:
+func map_transition(uid: String, data = {}) -> void:
 	if map_uid == uid:
-		print_debug("Already on map (%s), no transition" % [uid])
 		return
 
 	transitioning.emit()
-	map_transit = SaveGame.transit_to_dict(map_uid, uid, transit_return, transit_entry)
+	map_transit = SaveGame.transit_to_dict(map_uid, uid, data.get("return", ""), data.get("entry", ""))
 	SaveManager.save_game()
 	SaveManager.load_game()
+	map_transit = {}
 	transitioned.emit()
 
 

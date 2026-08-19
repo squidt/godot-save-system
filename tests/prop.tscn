@@ -21,7 +21,7 @@ func _physics_process(delta: float) -> void:
 [node name="Sprite3D" type="Sprite3D" unique_id=271544384]
 texture = ExtResource("1_msun4")
 script = SubResource("GDScript_msun4")
-metadata/Saveable = Object(Node,"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","script":ExtResource("2_ukn83"),"savenprint":Callable(),"_enabled":true,"_recreated":true,"behavior":ExtResource("3_6n3xd"),"_save_uid":null,"metadata/_custom_type_script":"uid://8dsguigkf3fd")
+metadata/Saveable = Object(Node,"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"physics_interpolation_mode":0,"auto_translate_mode":0,"editor_description":"","script":ExtResource("2_ukn83"),"savenprint":Callable(),"_enabled":true,"ownership":null,"recreation":null,"behavior":ExtResource("3_6n3xd"),"_save_uid":null,"metadata/_custom_type_script":"uid://8dsguigkf3fd")
 
 
 [node name="Saveable" type="Node" parent="." unique_id=52204666]

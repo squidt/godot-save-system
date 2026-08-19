@@ -39,7 +39,7 @@ static func to(node: Node) -> Variant:
 	node = node as Main
 
 	node.map_history[node.map_uid] = Saveable.if_is_trait(
-		node.map, func(save: Saveable): save.serialize(), {}
+		node.map, func(save: Saveable): return save.serialize(), {}
 	)
 	var data := {"map": node.map_uid, "history": node.map_history}
 	if !node.map_transit.is_empty():
@@ -47,21 +47,34 @@ static func to(node: Node) -> Variant:
 	return data
 
 
+# difference b/t saving game state and map transition:
+# game state has no 'transit' data
+# transit will load map being moved to, then load from history
 static func from(node: Node, data: Variant) -> void:
 	assert(node is Main)
 	node = node as Main
+
+	# map transition
 	if data.has("transit"):
-		node.map_load(data.get("transit").get("to"))
+		# TODO: explicitly hande level fail with warnings instead of defaulting back to original map
+		var map_uid = data.get("transit").get("to", data.get("map"))
+		node.map_load(map_uid)
+		node.map_history = data.get("history")
+		if node.map_history.has(map_uid):
+			Saveable.if_is_trait(node.map, func(save: Saveable): save.deserialize(node.map_history.get(map_uid)))
+		
+		# handle player move
 		var transits = node.get_tree().get_nodes_in_group("Transit")
 		var found = transits.find_custom(func(v: Node): return data.get("transit").get("entry") == v.transit_name)
 		if found != -1 and "get_transit_point" in found:
 			node.set_player_position(found.get_transit_point())
-	else:
-		node.map_load(data.get("map"))
+	else: # standard load from disk
+		var map_uid = data.get("map")
+		node.map_load(map_uid)
 		node.map_history = data.get("history")
-		if node.map_history.has(data.get("map")):
+		if node.map_history.has(map_uid):
 			Saveable.if_is_trait(
-				node.map, func(save: Saveable): save.deserialize(node.map_history.get(node.map_uid))
+				node.map, func(save: Saveable): save.deserialize(node.map_history.get(map_uid))
 			)
 
 
