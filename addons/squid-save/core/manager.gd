@@ -66,7 +66,7 @@ func is_save_owner() -> bool:
 
 
 func save_game() -> void:
-	_write_file(save_name, SaveManager.serialized())
+	_write_file(save_name, SaveManager.serialize())
 
 
 func load_game() -> void:
@@ -79,7 +79,7 @@ func load_game() -> void:
 	SaveManager.deserialize(data)
 
 
-func serialized() -> Dictionary:
+func serialize() -> Dictionary:
 	saving.emit()
 
 	var node := get_parent()

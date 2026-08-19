@@ -71,7 +71,7 @@ class Ownership:
 
 		for child: Node in children:
 			var child_save := Saveable.as_trait(child)
-			var child_data := child_save.serialized()
+			var child_data := child_save.serialize()
 
 			if !child_save.is_save_owner():
 				child_data["local"] = true

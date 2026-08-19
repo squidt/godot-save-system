@@ -39,7 +39,7 @@ static func to(node: Node) -> Variant:
 	node = node as Main
 
 	node.map_history[node.map_uid] = Saveable.if_is_trait(
-		node.map, func(save: Saveable): save.serialized(), {}
+		node.map, func(save: Saveable): save.serialize(), {}
 	)
 	var data := {"map": node.map_uid, "history": node.map_history}
 	if !node.map_transit.is_empty():

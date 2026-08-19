@@ -99,7 +99,7 @@ func is_save_owner() -> bool:
 # 	["xform", 0]: []
 # }
 #
-func serialized() -> Dictionary:
+func serialize() -> Dictionary:
 	saving.emit()
 
 	var node := get_parent()
@@ -143,4 +143,4 @@ func deserialize(data: Dictionary) -> void:
 
 
 func _debug_print_serialization() -> void:
-	print_debug("\n", JSON.stringify(serialized(), "    ", false))
+	print_debug("\n", JSON.stringify(serialize(), "    ", false))
