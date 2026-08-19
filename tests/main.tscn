@@ -1,42 +1,27 @@
 [gd_scene format=3 uid="uid://c6epweyctvsam"]
 
-[sub_resource type="GDScript" id="GDScript_wsebr"]
-resource_name = "main"
+[ext_resource type="Script" uid="uid://b7qxa43b6uy81" path="res://tests/main.gd" id="1_cb43m"]
+[ext_resource type="Script" uid="uid://8dsguigkf3fd" path="res://addons/save-system/core/saveable.gd" id="1_pi5dy"]
+[ext_resource type="Script" uid="uid://m15m5lohwcyj" path="res://addons/save-system/core/behavior.gd" id="2_gn22r"]
+[ext_resource type="Script" uid="uid://clmbn2ps3jgs5" path="res://addons/save-system/core/step.gd" id="3_cb43m"]
+[ext_resource type="Script" uid="uid://bgdgh221ym68a" path="res://tests/save_game.gd" id="4_gn22r"]
+
+[sub_resource type="Resource" id="Resource_cb43m"]
+script = ExtResource("4_gn22r")
+metadata/_custom_type_script = "uid://bgdgh221ym68a"
+
+[sub_resource type="Resource" id="Resource_y6b0w"]
+script = ExtResource("2_gn22r")
+steps = Array[ExtResource("3_cb43m")]([SubResource("Resource_cb43m")])
+metadata/_custom_type_script = "uid://m15m5lohwcyj"
+
+[sub_resource type="GDScript" id="GDScript_v07e6"]
+resource_name = "GameState"
 script/source = "extends Node
 
-const STARTING_MAP = \"uid://ci6dtybx64jjk\" # map_one.tscn
-
-var current_map: Node3D = null
-var _current_map_uid = \"\"
-
-# add map_one as first map
-func _ready() -> void:
-	map_transition(STARTING_MAP)
-
-
-func map_transition(_uid: String) -> void:
-	if _current_map_uid == _uid:
-		print_debug(\"Already on map (%s), no transition\" % [_uid])
-		return
-
-	if current_map:
-		current_map.queue_free()
-
-	_current_map_uid = _uid
-	var new_map = load(_uid).instantiate()
-	$World3D.add_child(new_map, true)
-	current_map = new_map
-	# TODO:
-	# save before transition:
-	# - save player
-	# - save map state and contents
-	# - save map to 'history'
-
-	# load next map:
-	# - load map from disk
-	# - if map in history:
-	#   - deserialize data into map from 'history'
-	pass
+@export var profile = \"\"
+@export var slot = \"\"
+@export var thumbnail_camera : Camera3D
 "
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wsebr"]
@@ -53,7 +38,15 @@ tonemap_mode = 2
 glow_enabled = true
 
 [node name="Main" type="Node" unique_id=1204108989]
-script = SubResource("GDScript_wsebr")
+script = ExtResource("1_cb43m")
+
+[node name="Saveable" type="Node" parent="." unique_id=1829189887]
+script = ExtResource("1_pi5dy")
+behavior = SubResource("Resource_y6b0w")
+metadata/_custom_type_script = "uid://8dsguigkf3fd"
+
+[node name="SaveInfo" type="Node" parent="." unique_id=2116426144]
+script = SubResource("GDScript_v07e6")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1435464205]
 environment = SubResource("Environment_ctdtd")
