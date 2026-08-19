@@ -171,9 +171,6 @@ class Ownership:
 	static func _collect_saveables(root: Node) -> Array[Node]:
 		var out: Array[Node] = []
 		_collect_saveables_impl(root, out)
-		print("%s collected %s:" % [root, out])
-		#for n in out:
-		#print("  %s" % [n.name])
 		return out
 
 	# root

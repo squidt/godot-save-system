@@ -1,15 +1,17 @@
 @tool
 extends EditorPlugin
 
+const AUTOLOAD = "SaveManager"
+
 
 func _enable_plugin() -> void:
 	# Add autoloads here.
-	pass
+	add_autoload_singleton(AUTOLOAD, "res://addons/squid-save/core/manager.gd")
 
 
 func _disable_plugin() -> void:
 	# Remove autoloads here.
-	pass
+	remove_autoload_singleton(AUTOLOAD)
 
 
 func _enter_tree() -> void:

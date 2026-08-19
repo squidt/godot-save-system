@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Save="*uid://c5e3kigol4u8t"
+SaveManager="*uid://c5e3kigol4u8t"
 
 [dotnet]
 
@@ -25,7 +25,7 @@ project/assembly_name="save-system"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/squid-save-system/plugin.cfg")
+enabled=PackedStringArray("res://addons/squid-save/plugin.cfg")
 
 [global_group]
 

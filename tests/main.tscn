@@ -1,10 +1,14 @@
 [gd_scene format=3 uid="uid://c6epweyctvsam"]
 
 [ext_resource type="Script" uid="uid://b7qxa43b6uy81" path="res://tests/main.gd" id="1_cb43m"]
-[ext_resource type="Script" uid="uid://8dsguigkf3fd" path="res://addons/squid-save/core/saveable.gd" id="1_pi5dy"]
 [ext_resource type="Script" uid="uid://m15m5lohwcyj" path="res://addons/squid-save/core/behavior.gd" id="2_gn22r"]
 [ext_resource type="Script" uid="uid://clmbn2ps3jgs5" path="res://addons/squid-save/core/step.gd" id="3_cb43m"]
 [ext_resource type="Script" uid="uid://bgdgh221ym68a" path="res://tests/save_game.gd" id="4_gn22r"]
+
+[sub_resource type="GDScript" id="GDScript_gn22r"]
+resource_name = "MainSaveable"
+script/source = "extends Saveable
+"
 
 [sub_resource type="Resource" id="Resource_cb43m"]
 script = ExtResource("4_gn22r")
@@ -41,7 +45,7 @@ glow_enabled = true
 script = ExtResource("1_cb43m")
 
 [node name="Saveable" type="Node" parent="." unique_id=1829189887]
-script = ExtResource("1_pi5dy")
+script = SubResource("GDScript_gn22r")
 behavior = SubResource("Resource_y6b0w")
 metadata/_custom_type_script = "uid://8dsguigkf3fd"
 
@@ -77,6 +81,3 @@ text = "go to map_one"
 [node name="GoMapTwo" type="Button" parent="World2D/Control/HBoxContainer" unique_id=2001556622]
 layout_mode = 2
 text = "go to map_two"
-
-[connection signal="pressed" from="World2D/Control/HBoxContainer/GoMapOne" to="." method="map_transition" binds= ["uid://ci6dtybx64jjk"]]
-[connection signal="pressed" from="World2D/Control/HBoxContainer/GoMapTwo" to="." method="map_transition" binds= ["uid://nq3ccdu6n4b4"]]

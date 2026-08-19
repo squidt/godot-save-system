@@ -1,4 +1,5 @@
-class_name SaveManager extends Saveable
+@tool
+extends Saveable
 
 const VERSION := &"0.0.1a"
 const USER = &"user://"
@@ -10,7 +11,6 @@ const EXTENSION = &".json"
 # slot -> name, timestamp, thumbnail
 
 static var save_name = &"profile1"
-static var this
 
 
 static func make_filepath(save_name: StringName) -> StringName:
@@ -45,7 +45,7 @@ static func _read_file(save_name: StringName) -> Dictionary:
 
 func _ready() -> void:
 	_recreated = false
-	this = self
+	print("ready called?")
 	super()
 
 
@@ -65,18 +65,18 @@ func is_save_owner() -> bool:
 	return true
 
 
-static func save_game() -> void:
-	_write_file(this.save_name, this.serialized())
+func save_game() -> void:
+	_write_file(save_name, SaveManager.serialized())
 
 
-static func load_game() -> void:
+func load_game() -> void:
 	var data := _read_file(save_name)
 
-	if !data.has("name") or !data.has("date") or !data.has("version") or !data.has("game"):
+	if !data.has("name") or !data.has("date") or !data.has("version") or !data.has("state"):
 		printerr("Expected required fields in game save")
 		return
 
-	this.deserialize(data)
+	SaveManager.deserialize(data)
 
 
 func serialized() -> Dictionary:
@@ -100,11 +100,3 @@ func deserialize(data: Dictionary) -> void:
 	SaveStep.Ownership.from(get_parent(), data.get("game"))
 
 	loaded.emit()
-
-#static func _queue_free_first_saveables(node: Node) -> void:
-#for child in node.get_children():
-#var saveable = Saveable.as_trait(child) if Saveable.is_trait(child) else null
-#if saveable and saveable.is_save_owner():
-#child.queue_free()
-#else:
-#_queue_free_first_saveables(child)
