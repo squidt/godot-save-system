@@ -2,26 +2,22 @@
 class_name SaveTransform3D extends SaveStep
 
 
-func title() -> StringName:
+static func title() -> StringName:
 	return &"xform"
 
 
-func version() -> int:
-	return 0
-
-
-func on_ready(node):
+static func on_ready(node):
 	pass
 
 
-func to(node: Node) -> Variant:
+static func to(node: Node) -> Variant:
 	if node is not Node3D:
 		return "invalid"
 
 	return _xf_to_str(node.global_transform)
 
 
-func from(node: Node, data: Variant) -> void:
+static func from(node: Node, data: Variant) -> void:
 	node = node as Node3D
 	data = data as String
 	if !node or !data:
@@ -30,7 +26,7 @@ func from(node: Node, data: Variant) -> void:
 	node.global_transform = _str_to_xf(data)
 
 
-func _xf_to_str(xf: Transform3D) -> String:
+static func _xf_to_str(xf: Transform3D) -> String:
 	return (
 		"%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s"
 		% [
@@ -50,7 +46,7 @@ func _xf_to_str(xf: Transform3D) -> String:
 	)
 
 
-func _str_to_xf(string: String) -> Transform3D:
+static func _str_to_xf(string: String) -> Transform3D:
 	var args = string.split_floats(",")
 	if args.size() != 12:
 		return Transform3D.IDENTITY

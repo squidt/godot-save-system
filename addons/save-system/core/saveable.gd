@@ -29,6 +29,12 @@ static func as_trait(node: Node) -> Saveable:
 	return node.get_meta(TRAIT_NAME)
 
 
+static func if_is_trait(node: Node, callable: Callable, default_return = null):
+	if Saveable.is_trait(node):
+		return callable.call(Saveable.as_trait(node))
+	return default_return
+
+
 static func get_uid(v: Object) -> String:
 	if v is Node:
 		return ResourceUID.id_to_text(ResourceLoader.get_resource_uid(v.scene_file_path))
@@ -55,15 +61,28 @@ static func make_object(uid: String) -> Object:
 func _ready() -> void:
 	assert(get_parent(), "Expected to be the child of any node.")
 	assert(behavior, "Expected 'Saveable::behavior' to be valid.")
-	get_parent().set_meta(TRAIT_NAME, self)
+	if !Engine.is_editor_hint():
+		get_parent().set_meta(TRAIT_NAME, self)
 
 
 func is_enabled() -> bool:
 	return _enabled
 
 
+func is_recreated() -> bool:
+	return _recreated
+
+
 func is_save_owner() -> bool:
-	return !get_parent().scene_file_path.is_empty() and _recreated
+	assert(
+		get_parent(),
+		(
+			"Orphaned [Saveable]. Somehow a [Saveable] has been added to the meta of a node "
+			+ "without the [Saveable] itself being inside the scene tree. This has happened "
+			+ "either due to a tool script or user chicanery and or sheganery."
+		)
+	)
+	return !get_parent().scene_file_path.is_empty() and is_recreated()
 
 
 # trait.save_unique_id(): {
@@ -89,14 +108,14 @@ func serialized() -> Dictionary:
 	# prefix
 	var pref := SaveStep.Prefix.new()
 	data[pref.title()] = pref.to(node)
-
 	for step in behavior.steps:
-		data.get_or_add("steps", {})[step.title()] = step.to(node)
+		data[step.title()] = step.to(node)
 
 	# ownership of nested saves if applicable
 	if is_save_owner():
-		var ownership := SaveStep.Ownership.new()
-		data[ownership.title()] = ownership.to(node)
+		var ownership := SaveStep.Ownership.to(node)
+		if !ownership.is_empty():
+			data[SaveStep.Ownership.title()] = ownership
 
 	_save_uid = pref.get_save_uid(data)
 	saved.emit()
@@ -104,10 +123,23 @@ func serialized() -> Dictionary:
 
 
 func deserialize(data: Dictionary) -> void:
+	loading.emit()
+	var node := get_parent()
+	var prefix_path: String = (data.get(SaveStep.Prefix.title(), []) as Array).get(0)
+	var prefix_array = prefix_path.rsplit("/", false, 1) if prefix_path else PackedStringArray()
+	var prefix_name = (
+		prefix_array.get(1)
+		if prefix_array.size() > 1
+		else prefix_array.get(0) if !prefix_array.is_empty() else "Unnamed"
+	)
+	node.name = prefix_name
 	for step in behavior.steps:
-		var entry = data.get("steps", {}).get(step.title())
+		var entry = data.get(step.title())
 		if entry:
 			step.from(get_parent(), entry)
+	if is_save_owner() and data.has(SaveStep.Ownership.title()):
+		SaveStep.Ownership.from(node, data[SaveStep.Ownership.title()])
+	loaded.emit()
 
 
 func _debug_print_serialization() -> void:
