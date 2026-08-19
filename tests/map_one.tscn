@@ -1,20 +1,18 @@
 [gd_scene format=3 uid="uid://ci6dtybx64jjk"]
 
 [ext_resource type="PackedScene" uid="uid://bw2nqd2un12gf" path="res://tests/prop.tscn" id="1_7xbg5"]
-[ext_resource type="Script" uid="uid://8dsguigkf3fd" path="res://addons/save-system/core/saveable.gd" id="1_mpu2u"]
-[ext_resource type="Script" uid="uid://m15m5lohwcyj" path="res://addons/save-system/core/behavior.gd" id="2_h707u"]
-[ext_resource type="Script" uid="uid://clmbn2ps3jgs5" path="res://addons/save-system/core/step.gd" id="3_m3oia"]
+[ext_resource type="Script" uid="uid://8dsguigkf3fd" path="res://addons/squid-save/core/saveable.gd" id="1_mpu2u"]
+[ext_resource type="Script" uid="uid://m15m5lohwcyj" path="res://addons/squid-save/core/behavior.gd" id="2_h707u"]
+[ext_resource type="Script" uid="uid://clmbn2ps3jgs5" path="res://addons/squid-save/core/step.gd" id="3_m3oia"]
 
 [sub_resource type="Resource" id="Resource_ji7sp"]
 script = ExtResource("2_h707u")
 
 [node name="MapA" type="Node3D" unique_id=1470678316]
-metadata/Saveable = null
 
 [node name="Saveable" type="Node" parent="." unique_id=1762453533]
 script = ExtResource("1_mpu2u")
 behavior = SubResource("Resource_ji7sp")
-metadata/_custom_type_script = "uid://8dsguigkf3fd"
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=515383187]
 transform = Transform3D(1, 0, 0, 0, 0.9659259, 0.25881907, 0, -0.25881907, 0.9659258, 0, 2, 5)

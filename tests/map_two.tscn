@@ -1,15 +1,14 @@
 [gd_scene format=3 uid="uid://nq3ccdu6n4b4"]
 
 [ext_resource type="PackedScene" uid="uid://bw2nqd2un12gf" path="res://tests/prop.tscn" id="1_1wloe"]
-[ext_resource type="Script" uid="uid://8dsguigkf3fd" path="res://addons/save-system/core/saveable.gd" id="1_dowcu"]
-[ext_resource type="Script" uid="uid://m15m5lohwcyj" path="res://addons/save-system/core/behavior.gd" id="2_0urec"]
-[ext_resource type="Script" uid="uid://clmbn2ps3jgs5" path="res://addons/save-system/core/step.gd" id="3_u2alg"]
+[ext_resource type="Script" uid="uid://8dsguigkf3fd" path="res://addons/squid-save/core/saveable.gd" id="1_dowcu"]
+[ext_resource type="Script" uid="uid://m15m5lohwcyj" path="res://addons/squid-save/core/behavior.gd" id="2_0urec"]
+[ext_resource type="Script" uid="uid://clmbn2ps3jgs5" path="res://addons/squid-save/core/step.gd" id="3_u2alg"]
 
 [sub_resource type="Resource" id="Resource_0o3ke"]
 script = ExtResource("2_0urec")
 
 [node name="MapB" type="Node3D" unique_id=214294452]
-metadata/Saveable = null
 
 [node name="Saveable" type="Node" parent="." unique_id=631802897]
 script = ExtResource("1_dowcu")

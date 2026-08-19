@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="SaveBehavior" format=3 uid="uid://c4ryqdatxevld"]
 
-[ext_resource type="Script" uid="uid://clmbn2ps3jgs5" path="res://addons/save-system/core/step.gd" id="2_f0366"]
-[ext_resource type="Script" uid="uid://m15m5lohwcyj" path="res://addons/save-system/core/behavior.gd" id="3_50jnv"]
+[ext_resource type="Script" uid="uid://clmbn2ps3jgs5" path="res://addons/squid-save/core/step.gd" id="2_f0366"]
+[ext_resource type="Script" uid="uid://m15m5lohwcyj" path="res://addons/squid-save/core/behavior.gd" id="3_50jnv"]
 [ext_resource type="Script" uid="uid://bwa143454sa74" path="res://tests/save_wiggle.gd" id="4_u3onb"]
 
 [sub_resource type="Resource" id="Resource_3fvwn"]

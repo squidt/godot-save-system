@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://c6epweyctvsam"]
 
 [ext_resource type="Script" uid="uid://b7qxa43b6uy81" path="res://tests/main.gd" id="1_cb43m"]
-[ext_resource type="Script" uid="uid://8dsguigkf3fd" path="res://addons/save-system/core/saveable.gd" id="1_pi5dy"]
-[ext_resource type="Script" uid="uid://m15m5lohwcyj" path="res://addons/save-system/core/behavior.gd" id="2_gn22r"]
-[ext_resource type="Script" uid="uid://clmbn2ps3jgs5" path="res://addons/save-system/core/step.gd" id="3_cb43m"]
+[ext_resource type="Script" uid="uid://8dsguigkf3fd" path="res://addons/squid-save/core/saveable.gd" id="1_pi5dy"]
+[ext_resource type="Script" uid="uid://m15m5lohwcyj" path="res://addons/squid-save/core/behavior.gd" id="2_gn22r"]
+[ext_resource type="Script" uid="uid://clmbn2ps3jgs5" path="res://addons/squid-save/core/step.gd" id="3_cb43m"]
 [ext_resource type="Script" uid="uid://bgdgh221ym68a" path="res://tests/save_game.gd" id="4_gn22r"]
 
 [sub_resource type="Resource" id="Resource_cb43m"]
