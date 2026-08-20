@@ -13,26 +13,39 @@ const EXTENSION = &".json"
 static var save_name = &"profile1"
 
 
-static func make_filepath(save_name: StringName) -> StringName:
-	return USER + FOLDER + save_name + EXTENSION
+## Constructs a [StringName] appending [constant USER], [constant FOLDER], and [constant EXTENSION]
+## to create a formatted save filepath.
+## [br]EXAMPLE:
+## [br][code]"user://folder/<save>.extension"[/code][br]
+## Does not perform i.o. operations
+func get_filepath_string(save: StringName) -> StringName:
+	return USER + FOLDER + save + EXTENSION
 
 
-static func _write_file(save_name: StringName, data: Dictionary) -> void:
+func write_file(filepath: StringName, data: Dictionary) -> Error:
 	var dir := DirAccess.open(USER)
-	if !dir.dir_exists(FOLDER):
-		dir.make_dir_recursive(FOLDER)
+	if dir:
+		var base := filepath.get_base_dir()
+		if !dir.dir_exists(base):
+			dir.make_dir_recursive(base)
+	else:
+		# TODO: Error handle
+		push_error("Failed to Open user file (%s). Which is guranteed by Godot" % [USER])
+		return DirAccess.get_open_error()
 
-	var filepath = make_filepath(save_name)
 	var file := FileAccess.open(filepath, FileAccess.WRITE)
-	if !file:
-		print("FileAccess Error: ", error_string(FileAccess.get_open_error()))
-	var json := JSON.stringify(data, "\t", false)
-	file.store_string(json)
-	file.close()
+	if file:
+		var json := JSON.stringify(data, "\t", false)
+		file.store_string(json)
+		file.close()
+		return OK
+	else:
+		var err = FileAccess.get_open_error()
+		push_error("FileAccess Error: ", error_string(FileAccess.get_open_error()))
+		return err
 
 
-static func _read_file(save_name: StringName) -> Dictionary:
-	var filepath = make_filepath(save_name)
+func read_file(filepath: StringName) -> Dictionary:
 	if !FileAccess.file_exists(filepath):
 		printerr("File (%s) does not exist" % [filepath])
 		return {}
@@ -40,6 +53,10 @@ static func _read_file(save_name: StringName) -> Dictionary:
 	var file := FileAccess.open(filepath, FileAccess.READ)
 	var data := JSON.parse_string(file.get_as_text()) as Dictionary
 	file.close()
+
+	if !data.has("name") or !data.has("date") or !data.has("version") or !data.has("state"):
+		printerr("Expected fields (%s, %s, %s, %s) in game save data" % ["name", "date", "version", "state"])
+
 	return data
 
 
@@ -54,17 +71,11 @@ func is_save_owner() -> bool:
 
 
 func save_game() -> void:
-	_write_file(save_name, SaveManager.serialize())
+	write_file(get_filepath_string(save_name), SaveManager.serialize())
 
 
 func load_game() -> void:
-	var data := _read_file(save_name)
-
-	if !data.has("name") or !data.has("date") or !data.has("version") or !data.has("state"):
-		printerr("Expected required fields in game save")
-		return
-
-	SaveManager.deserialize(data)
+	SaveManager.deserialize(read_file(get_filepath_string(save_name)))
 
 
 func serialize() -> Dictionary:

@@ -25,7 +25,4 @@ billboard = 2
 speed = -1.0
 metadata/Saveable = null
 
-[node name="Saveable" parent="Sprite3D" index="0" unique_id=52204666]
-recreation = 0
-
 [editable path="Sprite3D"]

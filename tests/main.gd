@@ -36,6 +36,8 @@ func _unhandled_input(event: InputEvent) -> void:
 # 3. spawn things
 ## Erase any previous map and load new one without serialization
 func map_load(uid: String) -> void:
+	if !ResourceUID.has_id(ResourceUID.text_to_id(uid)):
+		push_error("damn")
 	world_3d.get_children().all(func(c): c.queue_free())
 	map = null
 	map_uid = uid
@@ -50,9 +52,11 @@ func map_transition(uid: String, data = {}) -> void:
 		return
 
 	transitioning.emit()
+	# TODO: no save 'map_transit' to disk, keep memory only
 	map_transit = SaveGame.transit_to_dict(map_uid, uid, data.get("return", ""), data.get("entry", ""))
-	SaveManager.save_game()
-	SaveManager.load_game()
+	var autosave_filepath := SaveManager.get_filepath_string(SaveManager.save_name+"-autosave")
+	SaveManager.write_file(autosave_filepath, SaveManager.serialize())
+	SaveManager.deserialize(SaveManager.read_file(autosave_filepath))
 	map_transit = {}
 	transitioned.emit()
 
@@ -64,13 +68,9 @@ func set_player_position(global_transform: Transform3D) -> void:
 		found.global_transform = global_transform
 
 
-# save game state
-# record some info
 func _on_transitioning():
 	pass
 
 
-# load map
-# set player
 func _on_transitioned():
 	pass

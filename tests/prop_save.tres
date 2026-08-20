@@ -2,13 +2,19 @@
 
 [ext_resource type="Script" uid="uid://clmbn2ps3jgs5" path="res://addons/squid-save/core/step.gd" id="2_f0366"]
 [ext_resource type="Script" uid="uid://m15m5lohwcyj" path="res://addons/squid-save/core/behavior.gd" id="3_50jnv"]
+[ext_resource type="Script" uid="uid://b7pnrhnux5o2c" path="res://addons/squid-save/impl/properties.gd" id="4_3fvwn"]
 [ext_resource type="Script" uid="uid://bwa143454sa74" path="res://tests/save_wiggle.gd" id="4_u3onb"]
 
 [sub_resource type="Resource" id="Resource_3fvwn"]
 script = ExtResource("4_u3onb")
 metadata/_custom_type_script = "uid://bwa143454sa74"
 
+[sub_resource type="Resource" id="Resource_irosk"]
+script = ExtResource("4_3fvwn")
+properties = Array[StringName]([&"modulate", &"speed"])
+metadata/_custom_type_script = "uid://b7pnrhnux5o2c"
+
 [resource]
 script = ExtResource("3_50jnv")
-steps = Array[ExtResource("2_f0366")]([SubResource("Resource_3fvwn")])
+steps = Array[ExtResource("2_f0366")]([SubResource("Resource_3fvwn"), SubResource("Resource_irosk")])
 metadata/_custom_type_script = "uid://m15m5lohwcyj"
