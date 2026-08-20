@@ -24,5 +24,3 @@ modulate = Color(1, 0, 0, 1)
 billboard = 2
 speed = -1.0
 metadata/Saveable = null
-
-[editable path="Sprite3D"]

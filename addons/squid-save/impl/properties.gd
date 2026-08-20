@@ -9,9 +9,9 @@ static func title() -> StringName:
 
 func to(node: Node) -> Variant:
 	var data := {}
-	for p in properties:
-		if p in node:
-			data[p] = JSON.stringify(JSON.from_native(node.get(p)))
+	for property in properties:
+		if property in node:
+			data[property] = JSON.from_native(node.get(property))
 	return data
 
 
@@ -19,4 +19,4 @@ func from(node: Node, data: Variant) -> void:
 	assert(data is Dictionary)
 	for property in data.keys():
 		if property in node:
-			node.set(property, JSON.to_native(JSON.parse_string(data[property])))
+			node.set(property, JSON.to_native(data.get(property)))

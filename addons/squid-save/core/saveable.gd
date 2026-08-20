@@ -107,8 +107,10 @@ func serialize() -> Dictionary:
 	# prefix
 	var pref := SaveStep.Prefix.new()
 	data[pref.title()] = pref.to(node)
-	for step in behavior.steps:
-		data[step.title()] = step.to(node)
+	if behavior:
+		for step in behavior.steps:
+			if step:
+				data[step.title()] = step.to(node)
 
 	_append_ownership(node, data)
 
@@ -128,10 +130,12 @@ func deserialize(data: Dictionary) -> void:
 		else prefix_array.get(0) if !prefix_array.is_empty() else "Unnamed"
 	)
 	SaveStep.Prefix.new().from(node, data.get(SaveStep.Prefix.title()))
-	for step in behavior.steps:
-		var entry = data.get(step.title())
-		if entry:
-			step.from(get_parent(), entry)
+	if behavior:
+		for step in behavior.steps:
+			if step:
+				var entry = data.get(step.title())
+				if entry:
+					step.from(get_parent(), entry)
 	if is_save_owner() and data.has(SaveStep.Ownership.title()):
 		SaveStep.Ownership.new().from(node, data[SaveStep.Ownership.title()])
 	loaded.emit()

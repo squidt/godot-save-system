@@ -27,8 +27,8 @@ class Prefix:
 		return [name, Saveable.make_save_uid(node), Saveable.get_uid(node)]
 
 	func from(node: Node, data: Variant) -> void:
-		var parts = data[0].rsplit("/", false, 1)
-		var name = parts[1] if parts.size() > 1 else parts[0] if !parts.is_empty() else "huh"
+		var node_path = data[0] as NodePath
+		var name = node_path.get_name(node_path.get_name_count()-1) if node_path.get_name_count() > 0 else "huh"
 		# stupid wait because godot is stupid and im stupid and name conflicts persist past a
 		# single frame for ??? amount of time
 		await node.get_tree().create_timer(0.01).timeout.connect(func(): node.set_deferred("name", name), CONNECT_ONE_SHOT)
