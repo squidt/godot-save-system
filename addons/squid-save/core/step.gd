@@ -1,3 +1,4 @@
+@abstract
 class_name SaveStep extends Resource
 
 
@@ -10,13 +11,8 @@ static func on_ready(_node) -> void:
 	return
 
 
-static func to(_node: Node) -> Variant:
-	push_error("Abstract class function called. Expected implementation from inherited class")
-	return "invalid"
-
-
-static func from(_node: Node, _data: Variant) -> void:
-	push_error("Abstract class function called. Expected implementation from inherited class")
+@abstract func to(_node: Node) -> Variant
+@abstract func from(_node: Node, _data: Variant) -> void
 
 
 class Prefix:
@@ -25,14 +21,17 @@ class Prefix:
 	static func title() -> StringName:
 		return &"prefix"
 
-	static func to(node: Node) -> Variant:
+	func to(node: Node) -> Variant:
 		var save_owner = get_save_owner(node)
 		var name = save_owner.get_path_to(node) if save_owner else node.name
 		return [name, Saveable.make_save_uid(node), Saveable.get_uid(node)]
 
-	static func from(node: Node, data: Variant) -> void:
-		node.name = get_node_path(data).rsplit("/", false, 1).get(1)
-		Saveable.as_trait(node)._save_uid = get_save_uid(data)
+	func from(node: Node, data: Variant) -> void:
+		var parts = data[0].rsplit("/", false, 1)
+		var name = parts[1] if parts.size() > 1 else parts[0] if !parts.is_empty() else "huh"
+		# stupid wait because godot is stupid and im stupid and name conflicts persist past a
+		# single frame for ??? amount of time
+		await node.get_tree().create_timer(0.01).timeout.connect(func(): node.set_deferred("name", name), CONNECT_ONE_SHOT)
 
 	static func get_node_path(data: Dictionary) -> String:
 		return data[title()][0]
@@ -65,7 +64,7 @@ class Ownership:
 	static func on_ready(node) -> void:
 		pass
 
-	static func to(node: Node) -> Variant:
+	func to(node: Node) -> Variant:
 		var data := {}
 		var children := _collect_saveables(node)
 
@@ -87,19 +86,10 @@ class Ownership:
 	# 4. deserialize - data into recreated nodes || nodes not recreated
 	#
 	# data = Dictionary[SaveUID, Saveable's Data]
-	static func from(node: Node, data: Variant) -> void:
+	func from(node: Node, data: Variant) -> void:
 		assert(data is Dictionary)
 
-		var restored: Dictionary[String, Node] = {}
-
 		_queue_free_first_saveables(node)
-
-		# wait twice to fix name clashes on add_child()
-		await node.get_tree().process_frame
-		if !node:
-			return
-		await node.get_tree().process_frame
-		# end wait twice
 
 		for child_save_uid in data.keys():
 			var child_trait_data = data[child_save_uid]
@@ -115,14 +105,12 @@ class Ownership:
 				if !new:  # TODO: error printing/ handle/ default error obj
 					printerr("SaveStep.Ownership::from(): Was unable to recreate child (%s)" % [SaveStep.Prefix.get_scene_uid(child_trait_data)])
 					continue
-				restored[child_save_uid] = new
 
 				# get only path to parent
 				var graft_path = _rtrim_last_name(path_in_scene)
 				var graft_target = node.get_node(graft_path)
 				if graft_target:  # TODO: error handling
 					_graft_child(graft_target, new)
-					new.name = child_trait_data.get("prefix").get(0)
 				else:
 					print_debug(
 						(

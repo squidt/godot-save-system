@@ -127,20 +127,20 @@ func deserialize(data: Dictionary) -> void:
 		if prefix_array.size() > 1
 		else prefix_array.get(0) if !prefix_array.is_empty() else "Unnamed"
 	)
-	node.name = prefix_name
+	SaveStep.Prefix.new().from(node, data.get(SaveStep.Prefix.title()))
 	for step in behavior.steps:
 		var entry = data.get(step.title())
 		if entry:
 			step.from(get_parent(), entry)
 	if is_save_owner() and data.has(SaveStep.Ownership.title()):
-		SaveStep.Ownership.from(node, data[SaveStep.Ownership.title()])
+		SaveStep.Ownership.new().from(node, data[SaveStep.Ownership.title()])
 	loaded.emit()
 
 
 ## Appends ownership to data if applicable
 func _append_ownership(node: Node, data: Dictionary) -> void:
 	if ownership == Ownership.AUTO and is_save_owner():
-		var ownership := SaveStep.Ownership.to(node)
+		var ownership := SaveStep.Ownership.new().to(node)
 		if !ownership.is_empty():
 			data[SaveStep.Ownership.title()] = ownership
 

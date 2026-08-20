@@ -75,7 +75,7 @@ func serialize() -> Dictionary:
 		"name": save_name,
 		"date": Time.get_datetime_string_from_system(),
 		"version": VERSION,
-		"state": SaveStep.Ownership.to(node)
+		"state": SaveStep.Ownership.new().to(node)
 	}
 
 	saved.emit()
@@ -85,6 +85,6 @@ func serialize() -> Dictionary:
 func deserialize(data: Dictionary) -> void:
 	loading.emit()
 
-	SaveStep.Ownership.from(get_parent(), data.get("state"))
+	await SaveStep.Ownership.new().from(get_parent(), data.get("state"))
 
 	loaded.emit()

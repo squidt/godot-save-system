@@ -34,7 +34,7 @@ static func title() -> StringName:
 	return &"game"
 
 
-static func to(node: Node) -> Variant:
+func to(node: Node) -> Variant:
 	assert(node is Main)
 	node = node as Main
 
@@ -50,7 +50,7 @@ static func to(node: Node) -> Variant:
 # difference b/t saving game state and map transition:
 # game state has no 'transit' data
 # transit will load map being moved to, then load from history
-static func from(node: Node, data: Variant) -> void:
+func from(node: Node, data: Variant) -> void:
 	assert(node is Main)
 	node = node as Main
 

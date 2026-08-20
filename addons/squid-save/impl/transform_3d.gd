@@ -10,14 +10,14 @@ static func on_ready(node):
 	pass
 
 
-static func to(node: Node) -> Variant:
+func to(node: Node) -> Variant:
 	if node is not Node3D:
 		return "invalid"
 
 	return _xf_to_str(node.global_transform)
 
 
-static func from(node: Node, data: Variant) -> void:
+func from(node: Node, data: Variant) -> void:
 	node = node as Node3D
 	data = data as String
 	if !node or !data:
