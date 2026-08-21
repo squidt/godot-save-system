@@ -31,6 +31,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed(&"print_save"):
 		SaveManager._debug_print_serialization()
 
+
 # 1. save
 # 2. delete
 # 3. spawn things
@@ -53,8 +54,10 @@ func map_transition(uid: String, data = {}) -> void:
 
 	transitioning.emit()
 	# TODO: no save 'map_transit' to disk, keep memory only
-	map_transit = SaveGame.transit_to_dict(map_uid, uid, data.get("return", ""), data.get("entry", ""))
-	var autosave_filepath := SaveManager.get_filepath_string(SaveManager.save_name+"-autosave")
+	map_transit = SaveGame.transit_to_dict(
+		map_uid, uid, data.get("return", ""), data.get("entry", "")
+	)
+	var autosave_filepath := SaveManager.get_filepath_string(SaveManager.save_name + "-autosave")
 	SaveManager.write_file(autosave_filepath, SaveManager.serialize())
 	SaveManager.deserialize(SaveManager.read_file(autosave_filepath))
 	map_transit = {}
